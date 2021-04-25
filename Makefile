@@ -47,10 +47,14 @@ partition: ## (RISKY) Partition disk
 	sgdisk --zap-all /dev/sda # Deleting all partitions
 	sgdisk --new=1::+512M /dev/sda # Making boot partition
 	sgdisk -t=1:ef00 /dev/sda # Changing boot partition type
+	sgdisk --change-name=1:EFI system partition
 	sgdisk --new=2::+20G /dev/sda # Making root partition
+	sgdisk --change-name=2:Linux filesystem
 	sgdisk --new=3::+12G /dev/sda # Making swap partition
 	sgdisk -t=3:8200 /dev/sda # Changing swap partition type
+	sgdisk --change-name=3:Linux swap
 	sgdisk --new=4:: /dev/sda # Making home partition
+	sgdisk --change-name=4:Linux filesystem
 
 format: ## (RISKY) Format partitions
 	mkfs.fat -F32 /dev/sda1 # Formating boot partition as fat32
