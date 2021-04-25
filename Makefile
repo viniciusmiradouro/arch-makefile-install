@@ -7,9 +7,9 @@ SYSTEMD_ENABLE	:= sudo systemctl --now enable
 
 # listing packages for installation
 
-BASE := base base-devel linux firmware networkmanager 
+BASE := base base-devel linux-firmware networkmanager 
 BASE += intel-ucode efibootmgr grub man-db man-pages
-BASE += nvim zsh acpi acpi_call-lts rsync ethtool
+BASE += zsh acpi acpi_call-lts rsync ethtool
 BASE += xf86-video-intel dosfstools linux-lts-headers
 BASE += git neovim
 
@@ -76,7 +76,7 @@ update-mirrors: ## Update the mirrors with reflector
 	reflector --country Brazil --sort rate --save /etc/pacman.d/mirrorlist
 
 install-base: ## Install basic packages
-	pactrap /mnt $(BASE)
+	pacstrap /mnt $(BASE)
 
 basic-config: ## Configure a basic system
 	# Generating the filesystem tab
