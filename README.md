@@ -1,3 +1,3 @@
 # arch-makefile-install
 
-WIP. Please read the file
+WIP. Please read the file.
