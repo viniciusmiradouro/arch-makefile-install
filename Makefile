@@ -73,7 +73,7 @@ mount-partitions: ## Mount partitions
 	mount /dev/sda4 /mnt/home
 	
 update-mirrors: ## Update the mirrors with reflector
-	reflector --country Brazil --sort rate --save /etc/pacman.d/mirrorlist
+	reflector --country Brazil --age 12 --sort rate --save /etc/pacman.d/mirrorlist
 
 install-base: ## Install basic packages
 	pacstrap /mnt $(BASE)
@@ -81,23 +81,20 @@ install-base: ## Install basic packages
 basic-config: ## Configure a basic system
 	# Generating the filesystem tab
 	genfstab -U /mnt >> /mnt/etc/fstab
-	# Changing root
-	arch-chroot /mnt
 	# Setting time zone
-	ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
-	hwclock --systohc
+	ln -sf /mnt/usr/share/zoneinfo/America/Sao_Paulo /mnt/etc/localtime
 	# Setting the locale
-	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 	locale-gen
-	echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+	echo "LANG=en_US.UTF-8" >> /mnt/etc/locale.conf
 	# Setting the keyboard layout
-	echo "LANG=br-abnt2" >> /etc/vconsole.conf
+	echo "LANG=br-abnt2" >> /mnt/etc/vconsole.conf
 	# Setting the hostname
-	echo "euclid" >> /etc/hostname
+	echo "euclid" >> /mnt/etc/hostname
 	# Configuring networking
-	echo "127.0.0.1        localhost" >> /etc/hosts
-	echo "::1              localhost" >> /etc/hosts
-	echo "127.0.1.1        euclid.localdomain euclid" >> /etc/hosts
+	echo "127.0.0.1        localhost" >> /mnt/etc/hosts
+	echo "::1              localhost" >> /mnt/etc/hosts
+	echo "127.0.1.1        euclid.localdomain euclid" >> /mnt/etc/hosts
 	# Activating Internet
 	$(SYSTEMD_ENABLE) networkmanager
 
@@ -105,7 +102,7 @@ install-pkgs: ## Install nonbasic packages
 	$(PACMAN) $(PACMAN_PKGS)
 
 install-grub: ## Install grub and make config
-	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
-	grub-mkconfig -o /boot/grub/grub.cfg
+	grub-install --target=x86_64-efi --efi-directory=/mnt/boot --bootloader-id=GRUB
+	grub-mkconfig -o /mnt/boot/grub/grub.cfg
 
-full-install: prepare-disk mount-partitions update-mirrors install-base basic-config install-pkgs install-grub ## Complete Installation
+full-install: prepare-disk mount-partitions update-mirrors install-base basic-config install-grub ## Complete Installation
