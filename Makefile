@@ -62,7 +62,6 @@ format: ## (RISKY) Format partitions
 prepare-disk: partition format ## (RISKY) Partition and format disks
 
 mount-partitions: ## Mount partitions
-	mkdir /mnt/boot /mnt/home 
 	mount /dev/sda2 /mnt
 	mount /dev/sda1 /mnt/boot
 	mount /dev/sda4 /mnt/home
