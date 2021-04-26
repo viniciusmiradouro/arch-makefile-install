@@ -7,32 +7,32 @@ SYSTEMD_ENABLE	:= sudo systemctl --now enable
 
 # listing packages for installation
 
-BASE := base base-devel linux-firmware networkmanager 
-BASE += intel-ucode efibootmgr grub man-db man-pages
-BASE += zsh acpi acpi_call-lts rsync ethtool
-BASE += xf86-video-intel dosfstools linux-lts-headers
-BASE += git neovim
+BASE_PKGS := base base-devel linux-firmware networkmanager 
+BASE_PKGS += intel-ucode efibootmgr grub man-db man-pages
+BASE_PKGS += zsh acpi acpi_call-lts rsync ethtool
+BASE_PKGS += xf86-video-intel dosfstools linux-lts-headers
+BASE_PKGS += git neovim
 
-PACMAN_PKGS := abook alacritty alsa-utils aspell-pt
-PACMAN_PKGS += bat binutils bison bleachbit calc cmus
-PACMAN_PKGS += cronie dash discord dunst entr exa fzf
-PACMAN_PKGS += geogebra htop lf lynx m4 mpv msmtp neomutt
-PACMAN_PKGS += newsboat nitrogen nodejs
-PACMAN_PKGS += noto-fonts-emoji npm obs-studio pacmixer
-PACMAN_PKGS += pandoc pass playerctl powerline-fonts
-PACMAN_PKGS += pulseaudio-alsa python-pip python-slugify
-PACMAN_PKGS += qutebrowser redshift reflector
-PACMAN_PKGS += ripgrep scrot shellcheck
-PACMAN_PKGS += smartmontools snapper starship
-PACMAN_PKGS += stow stress surfraw
-PACMAN_PKGS += sxiv texlive-most tlp
-PACMAN_PKGS += transmission-cli udiskie udisks2
-PACMAN_PKGS += unzip virtualbox wget
-PACMAN_PKGS += xbindkeys xdg-user-dirs xdo
-PACMAN_PKGS += xmobar xmonad xmonad-contrib
-PACMAN_PKGS += xorg xorg-server youtube-dl
-PACMAN_PKGS += zathura zathura-djvu zathura-pdf-poppler
-PACMAN_PKGS += zsh-autosuggestions zsh-syntax-highlighting 
+FULL_PKGS := abook alacritty alsa-utils aspell-pt
+FULL_PKGS += bat binutils bison bleachbit calc cmus
+FULL_PKGS += cronie dash discord dunst entr exa fzf
+FULL_PKGS += geogebra htop lf lynx m4 mpv msmtp neomutt
+FULL_PKGS += newsboat nitrogen nodejs
+FULL_PKGS += noto-fonts-emoji npm obs-studio pacmixer
+FULL_PKGS += pandoc pass playerctl powerline-fonts
+FULL_PKGS += pulseaudio-alsa python-pip python-slugify
+FULL_PKGS += qutebrowser redshift reflector
+FULL_PKGS += ripgrep scrot shellcheck
+FULL_PKGS += smartmontools snapper starship
+FULL_PKGS += stow stress surfraw
+FULL_PKGS += sxiv texlive-most tlp
+FULL_PKGS += transmission-cli udiskie udisks2
+FULL_PKGS += unzip virtualbox wget
+FULL_PKGS += xbindkeys xdg-user-dirs xdo
+FULL_PKGS += xmobar xmonad xmonad-contrib
+FULL_PKGS += xorg xorg-server youtube-dl
+FULL_PKGS += zathura zathura-djvu zathura-pdf-poppler
+FULL_PKGS += zsh-autosuggestions zsh-syntax-highlighting 
 
 AUR_PKGS := betterlockscreen dashbinsh devour dockd
 AUR_PKGS += snap-pac-grub mutt-wizard nerd-fonts-mononoki
@@ -75,8 +75,11 @@ mount-partitions: ## Mount partitions
 update-mirrors: ## Update the mirrors with reflector
 	reflector --country Brazil --age 12 --sort rate --save /etc/pacman.d/mirrorlist
 
-install-base: ## Install basic packages
-	pacstrap /mnt $(BASE)
+install-minimal-pkgs: ## Install basic packages
+	pacstrap /mnt $(BASE_PKGS)
+
+install-full-pkgs: ## Install basic and optional packages
+	pacstrap /mnt $(BASE_PKGS) $(FULL_PKGS)
 
 basic-config: ## Configure a basic system
 	# Generating the filesystem tab
@@ -98,11 +101,12 @@ basic-config: ## Configure a basic system
 	# Activating Internet
 	$(SYSTEMD_ENABLE) networkmanager
 
-install-pkgs: ## Install nonbasic packages
-	$(PACMAN) $(PACMAN_PKGS)
+cp-make: ## Copies this makefile to every users home
+	cp arch-makefile-install/Makefile /mnt/home/*
 
-install-grub: ## Install grub and make config
-	grub-install --target=x86_64-efi --efi-directory=/mnt/boot --bootloader-id=GRUB
-	grub-mkconfig -o /mnt/boot/grub/grub.cfg
+chroot:
+	arch-chroot /mnt
 
-full-install: prepare-disk mount-partitions update-mirrors install-base basic-config install-grub ## Complete Installation
+minimal-sys-install: prepare-disk mount-partitions update-mirrors install-minimal-pkgs basic-config chroot cp-make ## Minimal complete Installation
+
+full-sys-install: prepare-disk mount-partitions update-mirrors install-full-pkgs basic-config chroot cp-make ## Minimal complete Installation
