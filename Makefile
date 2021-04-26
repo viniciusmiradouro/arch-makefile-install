@@ -99,7 +99,7 @@ basic-config: ## Configure a basic system
 	echo "127.0.1.1        euclid.localdomain euclid" >> /mnt/etc/hosts
 
 cp-make: ## Copies this makefile to every users home
-	cp arch-makefile-install/Makefile /mnt/home/*
+	cp Makefile /mnt/home/*/
 
 chroot:
 	arch-chroot /mnt
