@@ -88,18 +88,15 @@ basic-config: ## Configure a basic system
 	ln -sf /mnt/usr/share/zoneinfo/America/Sao_Paulo /mnt/etc/localtime
 	# Setting the locale
 	echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
-	locale-gen
 	echo "LANG=en_US.UTF-8" >> /mnt/etc/locale.conf
 	# Setting the keyboard layout
-	echo "LANG=br-abnt2" >> /mnt/etc/vconsole.conf
+	echo "KEYMAP=br-abnt2" >> /mnt/etc/vconsole.conf
 	# Setting the hostname
 	echo "euclid" >> /mnt/etc/hostname
 	# Configuring networking
 	echo "127.0.0.1        localhost" >> /mnt/etc/hosts
 	echo "::1              localhost" >> /mnt/etc/hosts
 	echo "127.0.1.1        euclid.localdomain euclid" >> /mnt/etc/hosts
-	# Activating Internet
-	$(SYSTEMD_ENABLE) networkmanager
 
 cp-make: ## Copies this makefile to every users home
 	cp arch-makefile-install/Makefile /mnt/home/*
