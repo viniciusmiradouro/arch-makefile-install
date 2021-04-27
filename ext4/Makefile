@@ -17,9 +17,9 @@ BASE_PKGS += git neovim mtools
 FULL_PKGS := abook alacritty alsa-utils aspell-pt
 FULL_PKGS += bat binutils bison bleachbit calc cmus
 FULL_PKGS += cronie dash discord dunst entr exa fzf
-FULL_PKGS += geogebra htop lf lynx m4 mpv msmtp neomutt
+FULL_PKGS += geogebra htop lynx m4 mpv msmtp neomutt
 FULL_PKGS += newsboat nitrogen nodejs
-FULL_PKGS += noto-fonts-emoji npm obs-studio pacmixer
+FULL_PKGS += noto-fonts-emoji npm obs-studio 
 FULL_PKGS += pandoc pass playerctl powerline-fonts
 FULL_PKGS += pulseaudio-alsa python-pip python-slugify
 FULL_PKGS += qutebrowser redshift reflector
@@ -37,7 +37,7 @@ FULL_PKGS += zsh-autosuggestions zsh-syntax-highlighting
 
 AUR_PKGS := betterlockscreen dashbinsh devour dockd
 AUR_PKGS += snap-pac-grub mutt-wizard nerd-fonts-mononoki
-AUR_PKGS += picom-jonaburg-git
+AUR_PKGS += picom-jonaburg-git pacmixer lf 
 
 help: ## Display this menu
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -86,18 +86,19 @@ chroot:
 
 base-config: ## Configure a basic system
 	# Setting time zone
-	ln -sf /mnt/usr/share/zoneinfo/America/Sao_Paulo /mnt/etc/localtime
+	ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 	# Setting the locale
-	echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
-	echo "LANG=en_US.UTF-8" >> /mnt/etc/locale.conf
+	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+	locale-gen
 	# Setting the keyboard layout
-	echo "KEYMAP=br-abnt2" >> /mnt/etc/vconsole.conf
+	echo "KEYMAP=br-abnt2" >> /etc/vconsole.conf
 	# Setting the hostname
-	echo "euclid" >> /mnt/etc/hostname
+	echo "euclid" >> /etc/hostname
 	# Configuring networking
-	echo "127.0.0.1        localhost" >> /mnt/etc/hosts
-	echo "::1              localhost" >> /mnt/etc/hosts
-	echo "127.0.1.1        euclid.localdomain euclid" >> /mnt/etc/hosts
+	echo "127.0.0.1        localhost" >> /etc/hosts
+	echo "::1              localhost" >> /etc/hosts
+	echo "127.0.1.1        euclid.localdomain euclid" >> /etc/hosts
 
 install-full-pkgs: ## Install optional packages
 	$(PACMAN) $(FULL_PKGS)
@@ -133,5 +134,5 @@ prepare-disk: partition format ## (RISKY) Partition and format disks
 
 sys-install: prepare-disk mount-partitions update-mirrors install-base cp-make-root chroot cp-make-home ## Minimal complete Installation
 
-setup-system: base-config  install-full-pkgs install-grub enable-services install-paru instal-aur ## System setup to do in a chroot
-	echo "vm ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/vm
+setup-system: base-config  install-full-pkgs install-grub enable-services ## System setup to do in a chroot
+	echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/wheel
