@@ -37,7 +37,7 @@ FULL_PKGS += zsh-autosuggestions zsh-syntax-highlighting
 
 AUR_PKGS := betterlockscreen dashbinsh devour dockd
 AUR_PKGS += snap-pac-grub mutt-wizard nerd-fonts-mononoki
-AUR_PKGS += picom-jonaburg-git pacmixer lf 
+AUR_PKGS += picom-jonaburg-git pacmixer reflector-mirrorlist-update 
 
 help: ## Display this menu
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -109,8 +109,9 @@ install-grub: ## install grub for a uefi system
 
 enable-services: ## Enable basic services
 	$(SYSTEMD_ENABLE) NetworkManager
-	$(SYSTEMD_ENABLE) systemctl enable tlp
+	$(SYSTEMD_ENABLE) tlp
 	$(SYSTEMD_ENABLE) acpid
+	$(SYSTEMD_ENABLE) reflector.service
 	$(SYSTEMD_ENABLE) reflector.timer
 	$(SYSTEMD_ENABLE) firewalld
 
