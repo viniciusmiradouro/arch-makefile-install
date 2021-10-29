@@ -34,10 +34,13 @@ FULL_PKGS += xmobar xmonad xmonad-contrib firewalld
 FULL_PKGS += xorg xorg-server youtube-dl
 FULL_PKGS += zathura zathura-djvu zathura-pdf-poppler
 FULL_PKGS += zsh-autosuggestions zsh-syntax-highlighting 
+FULL_PKGS += acpi acpi_call-lts github-cli lightdm lxappearance-gtk3
+FULL_PKGS += qt5ct
 
 AUR_PKGS := betterlockscreen dashbinsh devour dockd
 AUR_PKGS += snap-pac-grub mutt-wizard nerd-fonts-mononoki
 AUR_PKGS += picom-jonaburg-git pacmixer reflector-mirrorlist-update 
+AUR_PKGS += dockd kmonad lightdm-webkit-theme-aether
 
 help: ## Display this menu
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
