@@ -63,8 +63,8 @@ encrypt: ## (RISKY) Encrypt main partition
 lvmcreate: ## (RISKY) Create logical volumes
 	pvcreate /dev/mapper/cryptlvm
 	vgcreate vg1 /dev/mapper/cryptlvm
-	lvcreate -L 30G vg1 -n root
-	lvcreate -L 8G vg1 -n swap
+	lvcreate -L 5G vg1 -n root
+	lvcreate -L 512M vg1 -n swap
 	lvcreate -l 100%FREE vg1 -n home
 	
 format: ## (RISKY) Format partitions
